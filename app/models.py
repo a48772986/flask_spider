@@ -14,15 +14,15 @@ class Fiction(db.Model):
     __tablename__ = 'fiction'
     # __table_args__ = {"useexisting": True}
     id = db.Column(db.Integer, primary_key=True)
-    fiction_name = db.Column(db.String)
-    fiction_id = db.Column(db.String)
-    fiction_real_url = db.Column(db.String)
-    fiction_img = db.Column(db.String)
-    fiction_author = db.Column(db.String)
-    fiction_comment = db.Column(db.String)
-    update = db.Column(db.String)
-    new_content = db.Column(db.String)
-    new_url = db.Column(db.String)
+    fiction_name = db.Column(db.String(255))
+    fiction_id = db.Column(db.String(255))
+    fiction_real_url = db.Column(db.String(255))
+    fiction_img = db.Column(db.String(255))
+    fiction_author = db.Column(db.String(255))
+    fiction_comment = db.Column(db.String(255))
+    update = db.Column(db.String(255))
+    new_content = db.Column(db.String(255))
+    new_url = db.Column(db.String(255))
 
     def __repr__(self):
         return '<fiction %r> ' % self.fiction_name
