@@ -7,8 +7,9 @@ import requests
 import sys
 from bs4 import BeautifulSoup
 from pymysql.err import ProgrammingError
-from .spider_tools import get_one_page, update_fiction, insert_fiction, insert_fiction_content, insert_fiction_lst
-from app.models import Fiction_Lst, Fiction_Content, Fiction
+from .spider_tools import get_one_page, update_fiction, insert_fiction, insert_fiction_content, insert_fiction_lst, \
+    insert_fiction_list
+from app.models import Fiction_Lst, Fiction_Content, Fiction, FictionListAll
 
 
 def get_list_of_fiction(url):
@@ -26,6 +27,67 @@ def get_list_of_fiction(url):
     return fiction_list
 
 
+# 获取全部小说
+def set_all_list():
+    url = 'http://www.xbiquge.la/xiaoshuodaquan/'
+    fiction_list = get_list_of_fiction(url)
+    for rec in fiction_list:
+        insert_fiction_list(rec['fiction_name'], rec['fiction_url'])
+
+
+# 获取小说图片信息等内容
+def set_fiction_all(soup, fiction_name, fiction_url):
+    div = soup.find_all('div', id='fmimg')
+    info = soup.find_all('div', id='info')
+    comment = soup.find_all('div', id='intro')
+
+    fiction_id = fiction_url.split('/')[-1]
+    fiction_img = div[0].find_all('img')[0]['src']
+    fiction_author = info[0].find_all('p')[0].sting.split(':')[-1]
+    update = info[0].find_all('p')[2].sting.split(':')[-1]
+    new_url = info[0].find_all('p')[3].find_all('a')[0]['href']
+    new_content = info[0].find_all('p')[3].find_all('a')[0].string
+    fiction_comment = comment[0].find_all('p')[1].string
+
+    insert_fiction(fiction_name, fiction_id, fiction_url, fiction_img,
+                   fiction_author, fiction_comment, update, new_url, new_content)
+
+
+def set_fiction_lst_all(soup, fiction_name, fiction_url):
+    div = soup.find_all('div', id='list')
+
+    lst = div[0].find_all('a')
+    fiction_id = fiction_url.split('/')[-1]
+    for rec in lst:
+        fiction_lst_url = rec['href']
+        fiction_lst_name = rec.string
+        insert_fiction_lst(fiction_name, fiction_id, fiction_lst_url,
+                           fiction_lst_name, fiction_url)
+
+
+def get_fiction_list(fiction_name, fiction_url, flag=1):
+    # 获取小说列表
+    fiction = Fiction().query.filter_by(fiction_name=fiction_name).first()
+    if fiction is None:
+        fiction_html = get_one_page(fiction_url, sflag=flag)
+        soup = BeautifulSoup(fiction_html, 'html5lib')
+        set_fiction_all(soup, fiction_name, fiction_url)
+    fiction = Fiction().query.filter_by(fiction_name=fiction_name).first()
+    if fiction is None:
+        print('获取 {} 失败！！！'.format(fiction_name))
+        raise Exception('小说 :{} 获取失败！！！'.format(name))
+    return fiction
+
+
+def get_fiction_lst(fiction_name, fiction_url, flag=1):
+    fiction_lst = Fiction_Lst().query.filter_by(fiction_name=fiction_name).all()
+    if fiction_lst is None:
+        # 爬取所有章节
+        fiction_html = get_one_page(fiction_url, sflag=flag)
+        soup = BeautifulSoup(fiction_html, 'html5lib')
+        set_fiction_lst_all(soup, fiction_name, fiction_url)
+
+
 def search_fiction(name, flag=1):
     """输入小说名字
 
@@ -34,54 +96,21 @@ def search_fiction(name, flag=1):
     if name is None:
         raise Exception('小说名字必须输入！！！')
 
-    url = 'http://www.xbiquge.la/xiaoshuodaquan/'
-    html = get_one_page(url, sflag=flag)
-    soup = BeautifulSoup(html, 'html5lib')
-    result_list = soup.find('div', 'result-list')
-    fiction_lst = result_list.find_all('a', 'result-game-item-title-link')
-    fiction_url = fiction_lst[0].get('href')
-    fiction_name = fiction_lst[0].text.strip()
-    fiction_img = soup.find('img')['src']
-    fiction_comment = soup.find_all('p', 'result-game-item-desc')[0].text
-    fiction_author = soup.find_all(
-        'div', 'result-game-item-info')[0].find_all('span')[1].text.strip()
+    fiction = FictionListAll().query.filter_by(fiction_name=name).first()
 
-    if fiction_name is None:
+    # 如果没有找到，就去爬取所有小说
+    if fiction is None:
+        set_all_list()
+    fiction = FictionListAll().query.filter_by(fiction_name=name).first()
+
+    # 爬取完成之后还是没有就真的没有了
+    if fiction is None:
         print('{} 小说不存在！！！'.format(name))
         raise Exception('{} 小说不存在！！！'.format(name))
-
-    fictions = (fiction_name, fiction_url, fiction_img, fiction_author,
-                fiction_comment)
-    save_fiction_url(fictions)
+    fiction_name = fiction[0].fiction_name
+    fiction_url = fiction[0].fiction_url
 
     return fiction_name, fiction_url
-
-
-def get_fiction_list(fiction_name, fiction_url, flag=1):
-    # 获取小说列表
-    fiction_html = get_one_page(fiction_url, sflag=flag)
-    soup = BeautifulSoup(fiction_html, 'html5lib')
-    dd_lst = soup.find_all('dd')
-    updatetime = str(soup.find(id='info').find_all('p')[-2]).strip('<p>/')
-    new_content = soup.find(id="info").find_all('p')[-1].a.text
-    fiction_id = fiction_url.split('/')[-2]
-    new_url = soup.find(id="info").find_all('p')[-1].a['href'].strip('.html')
-    # 更新最新章节
-    update_fiction(
-        fiction_id=fiction_id,
-        update_time=updatetime,
-        new_content=new_content,
-        new_url=new_url)
-
-    fiction_lst = []
-    for item in dd_lst[12:]:
-        fiction_lst_name = item.a.text.strip()
-        fiction_lst_url = item.a['href'].split('/')[-1].strip('.html')
-        fiction_real_url = fiction_url + fiction_lst_url + '.html'
-        lst = (fiction_name, fiction_id, fiction_lst_url, fiction_lst_name,
-               fiction_real_url)
-        fiction_lst.append(lst)
-    return fiction_lst
 
 
 def get_fiction_content(fiction_url, flag=1):
@@ -98,12 +127,6 @@ def get_fiction_content(fiction_url, flag=1):
         save_fiction_content(fiction_url, f_content)
     else:
         print('此章节已存在，无需下载！！！')
-
-
-def save_fiction_url(fictions):
-    args = (fictions[0], fictions[1].split('/')[-2], fictions[1], fictions[2],
-            fictions[3], fictions[4])
-    insert_fiction(*args)
 
 
 def save_fiction_lst(fiction_lst):
@@ -124,10 +147,11 @@ def save_fiction_content(fiction_url, fiction_content):
 def down_fiction_lst(f_name):
     # 1.搜索小说
     args = search_fiction(f_name, flag=0)
-    # 2.获取小说目录列表
-    fiction_lst = get_fiction_list(*args, flag=0)
-    # 3.保存小说目录列表
-    flag = save_fiction_lst(fiction_lst)
+    # 2.获取小说标题，图片等内容
+    get_fiction_list(args)
+    # 3.获取小说章节信息
+    get_fiction_lst(args)
+
     print('下载小说列表完成！！')
 
 

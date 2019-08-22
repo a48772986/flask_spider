@@ -104,12 +104,10 @@ def f_search():
     f_name = request.args.get('f_name')
     print('收到输入：', f_name)
     # 1.查询数据库存在记录
-    fictions = Fiction().query.all()
+    fictions = Fiction_Lst().query.filter_by(fiction_name=f_name).all()
     fiction = None
-    for x in fictions:
-        if f_name in x.fiction_name:
-            fiction = x
-            break
+    if len(fictions) > 0:
+        fiction = fictions[0]
 
     if fiction:
         fiction_lst = Fiction_Lst().query.filter_by(
@@ -145,13 +143,10 @@ def f_search():
                 flag=4)
     else:
         down_fiction_lst(f_name)
-        fictions = Fiction().query.all()
+        fictions = Fiction().query.filter_by('fiction_name', f_name).first()
         print('fictions=', fictions)
-        for fiction in fictions:
-            if f_name in fiction.fiction_name:
-                break
 
-        if f_name not in fiction.fiction_name:
+        if fictions is None:
             return render_template('fiction_error.html', message='暂无此小说信息')
 
         fiction_lst = Fiction_Lst().query.filter_by(
@@ -161,7 +156,7 @@ def f_search():
             fictions=fictions,
             fiction=fiction,
             fiction_lst=fiction_lst,
-            fiction_name=fiction.fiction_name,
+            fiction_name=fictions.fiction_name,
             flag=4)
 
 

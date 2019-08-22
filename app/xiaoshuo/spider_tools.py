@@ -12,7 +12,7 @@ from time import ctime, sleep, time
 import pymysql
 import requests
 from requests.exceptions import RequestException
-from ..models import Fiction, Fiction_Content, Fiction_Lst
+from ..models import Fiction, Fiction_Content, Fiction_Lst, FictionListAll
 from .. import db
 
 # 请求头
@@ -78,7 +78,7 @@ def get_one_page(url, proxies=None, sflag=1):
 
 
 def insert_fiction(fiction_name, fiction_id, fiction_real_url, fiction_img,
-                   fiction_author, fiction_comment):
+                   fiction_author, fiction_comment, update, new_url, new_content):
     fiction = Fiction().query.filter_by(fiction_id=fiction_id).first()
     if fiction is None:
         fiction = Fiction(
@@ -87,7 +87,10 @@ def insert_fiction(fiction_name, fiction_id, fiction_real_url, fiction_img,
             fiction_real_url=fiction_real_url,
             fiction_img=fiction_img,
             fiction_author=fiction_author,
-            fiction_comment=fiction_comment)
+            fiction_comment=fiction_comment,
+            update=update,
+            new_url=new_url,
+            new_content=new_content)
         db.session.add(fiction)
         db.session.commit()
     else:
@@ -124,4 +127,10 @@ def update_fiction(fiction_id, update_time, new_content, new_url):
     fiction.new_content = new_content
     fiction.new_url = new_url
     db.session.add(fiction)
+    db.session.commit()
+
+
+def insert_fiction_list(fiction_name, fiction_url):
+    fiction_list = FictionListAll(fiction_name=fiction_name, fiction_url=fiction_url)
+    db.session.add(fiction_list)
     db.session.commit()
