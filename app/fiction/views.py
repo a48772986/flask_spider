@@ -156,7 +156,7 @@ def f_search():
             fictions=fictions,
             fiction=fiction,
             fiction_lst=fiction_lst,
-            fiction_name=fictions.fiction_name,
+            fiction_name=fictions[0].fiction_name,
             flag=4)
 
 
