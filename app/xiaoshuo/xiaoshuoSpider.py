@@ -41,7 +41,7 @@ def set_fiction_all(soup, fiction_name, fiction_url):
     info = soup.find_all('div', id='info')
     comment = soup.find_all('div', id='intro')
 
-    fiction_id = fiction_url.split('/')[-1]
+    fiction_id = fiction_url.split('/')[-2]
     fiction_img = div[0].find_all('img')[0]['src']
     fiction_author = info[0].find_all('p')[0].string.split('：')[-1]
     update = info[0].find_all('p')[2].string.split('：')[-1]
@@ -57,7 +57,7 @@ def set_fiction_lst_all(soup, fiction_name, fiction_url):
     div = soup.find_all('div', id='list')
 
     lst = div[0].find_all('a')
-    fiction_id = fiction_url.split('/')[-1]
+    fiction_id = fiction_url.split('/')[-2]
     for rec in lst:
         fiction_lst_url = rec['href']
         fiction_lst_name = rec.string
