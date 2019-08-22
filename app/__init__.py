@@ -3,7 +3,7 @@ from flask import Flask
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from config import Config
+from config import config
 
 bootstrap = Bootstrap()
 db = SQLAlchemy()
@@ -18,8 +18,8 @@ def create_app(config_name):
     # __name__ 决定应用根目录
     app = Flask(__name__)
     # 初始化app配置
-    app.config.from_object(Config[config_name])
-    Config[config_name].init_app(app)
+    app.config.from_object(config[config_name])
+    config[config_name].init_app(app)
     # 扩展应用初始化
     bootstrap.init_app(app)
     db.init_app(app)
