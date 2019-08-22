@@ -81,7 +81,7 @@ def get_fiction_list(fiction_name, fiction_url, flag=1):
 
 
 def get_fiction_lst(fiction_name, fiction_url, flag=1):
-    fiction_lst = Fiction_Lst().query.filter_by(fiction_name=fiction_name).all()
+    fiction_lst = Fiction_Lst().query.filter_by(fiction_name=fiction_name).first()
     if fiction_lst is None:
         # 爬取所有章节
         fiction_html = get_one_page(fiction_url, sflag=flag)
