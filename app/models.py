@@ -10,6 +10,16 @@ from flask import current_app
 from . import db, login_manager
 
 
+class FictionListAll(db.Model):
+    __tablename__ = 'fiction_list_all'
+    id = db.Column(db.Integer, primary_key=True)
+    fiction_name = db.Column(db.String(255))
+    fiction_url = db.Column(db.String(255))
+
+    def __repr__(self):
+        return '<fiction %r> ' % self.fiction_name
+
+
 class Fiction(db.Model):
     __tablename__ = 'fiction'
     # __table_args__ = {"useexisting": True}
@@ -85,7 +95,7 @@ class User(UserMixin, db.Model):
         return self.user_id
 
     def generate_auth_token(self, expiration=3600):
-        #生成令牌字符串token
+        # 生成令牌字符串token
         s = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
         return s.dumps({'user_id': self.user_id}).decode("utf-8")
 
