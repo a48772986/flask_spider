@@ -54,12 +54,13 @@ def set_fiction_all(soup, fiction_name, fiction_url):
 
 
 def set_fiction_lst_all(soup, fiction_name, fiction_url):
-    div = soup.find_all('div', id='list')
+    div = soup.find_all('div', class_='box_con')[1].find_all('div', id='list')
 
     lst = div[0].find_all('a')
     fiction_id = fiction_url.split('/')[-2]
+    print(len(div))
     for rec in lst:
-        fiction_lst_url = rec['href']
+        fiction_lst_url = 'http://www.xbiquge.la/xiaoshuodaquan' + rec['href']
         fiction_lst_name = rec.string
         insert_fiction_lst(fiction_name, fiction_id, fiction_lst_url,
                            fiction_lst_name, fiction_url)
