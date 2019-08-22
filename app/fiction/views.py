@@ -150,7 +150,7 @@ def f_search():
             return render_template('fiction_error.html', message='暂无此小说信息')
 
         fiction_lst = Fiction_Lst().query.filter_by(
-            fiction_id=fiction.fiction_id).all()
+            fiction_id=fictions.fiction_id).all()
         return render_template(
             'fiction_lst.html',
             fictions=fictions,
