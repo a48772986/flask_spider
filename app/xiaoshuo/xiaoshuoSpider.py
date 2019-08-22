@@ -19,7 +19,6 @@ def get_list_of_fiction(url):
     a = div[0].find_all('a')
     fiction_list = []
     for rec in a:
-        print rec
         fiction_name = rec.string
         fiction_url = rec['href']
         temp = {'fiction_name': fiction_name, 'fiction_url': fiction_url}
