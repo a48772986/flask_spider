@@ -8,7 +8,23 @@ import sys
 from bs4 import BeautifulSoup
 from pymysql.err import ProgrammingError
 from .spider_tools import get_one_page, update_fiction, insert_fiction, insert_fiction_content, insert_fiction_lst
-from ..models import Fiction_Lst, Fiction_Content, Fiction
+from app.models import Fiction_Lst, Fiction_Content, Fiction
+
+
+def get_list_of_fiction(url):
+    page = get_one_page(url)
+    soup = BeautifulSoup(page, 'html5lib')
+    # print soup
+    div = soup.find_all('div', id='main')
+    a = div[0].find_all('a')
+    fiction_list = []
+    for rec in a:
+        print rec
+        fiction_name = rec.string
+        fiction_url = rec['href']
+        temp = {'fiction_name': fiction_name, 'fiction_url': fiction_url}
+        fiction_list.append(temp)
+    return fiction_list
 
 
 def search_fiction(name, flag=1):
@@ -19,9 +35,7 @@ def search_fiction(name, flag=1):
     if name is None:
         raise Exception('小说名字必须输入！！！')
 
-    url = 'http://zhannei.baidu.com/cse/search?s=920895234054625192&q={}'.format(
-        name)
-
+    url = 'http://www.xbiquge.la/xiaoshuodaquan/'
     html = get_one_page(url, sflag=flag)
     soup = BeautifulSoup(html, 'html5lib')
     result_list = soup.find('div', 'result-list')
