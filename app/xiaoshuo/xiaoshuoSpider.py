@@ -146,11 +146,11 @@ def save_fiction_content(fiction_url, fiction_content):
 
 def down_fiction_lst(f_name):
     # 1.搜索小说
-    args = search_fiction(f_name, flag=0)
+    fiction_name, fiction_url = search_fiction(f_name, flag=0)
     # 2.获取小说标题，图片等内容
-    get_fiction_list(args)
+    get_fiction_list(fiction_name, fiction_url)
     # 3.获取小说章节信息
-    get_fiction_lst(args)
+    get_fiction_lst(fiction_name, fiction_url)
 
     print('下载小说列表完成！！')
 
