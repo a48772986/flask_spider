@@ -7,8 +7,8 @@ import requests
 import sys
 from bs4 import BeautifulSoup
 from pymysql.err import ProgrammingError
-from app.xiaoshuo.spider_tools import get_one_page, update_fiction, insert_fiction, insert_fiction_content, insert_fiction_lst
-from app.models import Fiction_Lst, Fiction_Content, Fiction
+from .spider_tools import get_one_page, update_fiction, insert_fiction, insert_fiction_content, insert_fiction_lst
+from ..models import Fiction_Lst, Fiction_Content, Fiction
 
 
 def search_fiction(name, flag=1):

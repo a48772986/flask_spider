@@ -6,15 +6,16 @@
 import os
 
 from time import strftime
+from datetime import datetime
 import logging
 
-log_name = os.path.join(
-    os.getenv('HOME'), 'log/flask/log_{}.log'.format(strftime('%Y%m%d')))
+# log_name = os.path.join(
+#     os.getenv('HOME'), 'log/flask/log_{}.log'.format(datetime.now().strftime('%Y%m%d')))
 
-FLASK_LOG_FILE = os.getenv('FLASK_LOG_FILE') or log_name
+FLASK_LOG_FILE = os.getenv('FLASK_LOG_FILE')
 
-if not os.path.exists(os.path.dirname(FLASK_LOG_FILE)):
-    os.makedirs(os.path.dirname(FLASK_LOG_FILE))
+# if not os.path.exists(os.path.dirname(FLASK_LOG_FILE)):
+#     os.makedirs(os.path.dirname(FLASK_LOG_FILE))
 
 
 def get_handler():

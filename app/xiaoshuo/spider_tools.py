@@ -12,10 +12,10 @@ from time import ctime, sleep, time
 import pymysql
 import requests
 from requests.exceptions import RequestException
-from app.models import Fiction, Fiction_Content, Fiction_Lst
-from app import db
+from ..models import Fiction, Fiction_Content, Fiction_Lst
+from .. import db
 
-#请求头
+# 请求头
 headers = {}
 headers[
     'Accept'] = 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8'
@@ -49,7 +49,7 @@ agents = [
 
 
 def get_one_page(url, proxies=None, sflag=1):
-    #获取给定的url页面
+    # 获取给定的url页面
     while True:
         try:
             headers['User-Agent'] = choice(agents)

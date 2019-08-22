@@ -1,3 +1,4 @@
+# encoding:utf-8
 import logging
 import logging.handlers
 from .config import LOGGER_FILE, LOGGER_ERROR_FILE

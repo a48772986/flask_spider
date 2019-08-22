@@ -1,8 +1,9 @@
+# encoding:utf-8
 from flask import Flask
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from config import config
+from ..config import Config
 
 bootstrap = Bootstrap()
 db = SQLAlchemy()
@@ -17,19 +18,19 @@ def create_app(config_name):
     # __name__ 决定应用根目录
     app = Flask(__name__)
     # 初始化app配置
-    app.config.from_object(config[config_name])
-    config[config_name].init_app(app)
+    app.config.from_object(Config[config_name])
+    Config[config_name].init_app(app)
     # 扩展应用初始化
     bootstrap.init_app(app)
     db.init_app(app)
     login_manager.init_app(app)
 
-    #初始化蓝本
+    # 初始化蓝本
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
     from .fiction import fiction as fiction_blueprint
     app.register_blueprint(fiction_blueprint)
-    #初始化api
+    # 初始化api
     from .api import api
     api.init_app(app)
     from .api import auth_api as authapi_blueprint
