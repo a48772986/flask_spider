@@ -143,7 +143,7 @@ def f_search():
                 flag=4)
     else:
         down_fiction_lst(f_name)
-        fictions = Fiction().query.filter_by('fiction_name', f_name).first()
+        fictions = Fiction().query.filter_by(fiction_name=f_name).first()
         print('fictions=', fictions)
 
         if fictions is None:
