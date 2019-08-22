@@ -44,7 +44,7 @@ def set_fiction_all(soup, fiction_name, fiction_url):
     fiction_id = fiction_url.split('/')[-1]
     fiction_img = div[0].find_all('img')[0]['src']
     fiction_author = info[0].find_all('p')[0].string.split('：')[-1]
-    update = info[0].find_all('p')[2].sting.split('：')[-1]
+    update = info[0].find_all('p')[2].string.split('：')[-1]
     new_url = info[0].find_all('p')[3].find_all('a')[0]['href']
     new_content = info[0].find_all('p')[3].find_all('a')[0].string
     fiction_comment = comment[0].find_all('p')[1].string
