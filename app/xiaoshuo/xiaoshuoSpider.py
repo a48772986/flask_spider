@@ -108,8 +108,8 @@ def search_fiction(name, flag=1):
     if fiction is None:
         print('{} 小说不存在！！！'.format(name))
         raise Exception('{} 小说不存在！！！'.format(name))
-    fiction_name = fiction[0].fiction_name
-    fiction_url = fiction[0].fiction_url
+    fiction_name = fiction.fiction_name
+    fiction_url = fiction.fiction_url
 
     return fiction_name, fiction_url
 
