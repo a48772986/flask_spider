@@ -154,7 +154,7 @@ def f_search():
         return render_template(
             'fiction_lst.html',
             fictions=fictions,
-            fiction=fictions[0],
+            fiction=fiction,
             fiction_lst=fiction_lst,
             fiction_name=fictions[0].fiction_name,
             flag=4)
