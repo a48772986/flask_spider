@@ -116,14 +116,15 @@ def search_fiction(name, flag=1):
 
 def get_fiction_content(fiction_url, flag=1):
     fiction_id = fiction_url.split('/')[-2]
-    fiction_conntenturl = fiction_url.split('/')[-1].strip('.html')
+    # fiction_conntenturl = fiction_url.split('/')[-1].strip('.html')
     fc = Fiction_Content().query.filter_by(
         fiction_id=fiction_id, fiction_url=fiction_url).first()
     if fc is None:
         print('此章节不存在，需下载')
         html = get_one_page(fiction_url, sflag=flag)
         soup = BeautifulSoup(html, 'html5lib')
-        content = soup.find(id='content')
+        content = \
+        soup.find_all(div, class_='content_read')[0].find_all(div, class_='box_con')[0].find_all(div, id='content')[0]
         print(content.string)
         f_content = str(content.string)
         save_fiction_content(fiction_url, f_content)
