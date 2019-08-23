@@ -124,7 +124,7 @@ def get_fiction_content(fiction_url, flag=1):
         html = get_one_page(fiction_url, sflag=flag)
         soup = BeautifulSoup(html, 'html5lib')
         content = \
-        soup.find_all(div, class_='content_read')[0].find_all(div, class_='box_con')[0].find_all(div, id='content')[0]
+        soup.find_all('div', class_='content_read')[0].find_all('div', class_='box_con')[0].find_all('div', id='content')[0]
         print(content.string)
         f_content = str(content.string)
         save_fiction_content(fiction_url, f_content)
