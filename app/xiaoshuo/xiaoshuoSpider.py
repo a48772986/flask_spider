@@ -60,7 +60,7 @@ def set_fiction_lst_all(soup, fiction_name, fiction_url):
     fiction_id = fiction_url.split('/')[-2]
     print(len(div))
     for rec in lst:
-        fiction_lst_url = 'http://www.xbiquge.la/xiaoshuodaquan' + rec['href']
+        fiction_lst_url = 'http://www.xbiquge.la' + rec['href']
         fiction_lst_name = rec.string
         insert_fiction_lst(fiction_name, fiction_id, fiction_lst_url,
                            fiction_lst_name, fiction_url)
@@ -97,12 +97,12 @@ def search_fiction(name, flag=1):
     if name is None:
         raise Exception('小说名字必须输入！！！')
 
-    fiction = FictionListAll().query.filter_by(fiction_name=name).all()
+    fiction = FictionListAll().query.filter_by(fiction_name=name).first()
 
     # 如果没有找到，就去爬取所有小说
     if fiction is None:
         set_all_list()
-        fiction = FictionListAll().query.filter_by(fiction_name=name).all()
+        fiction = FictionListAll().query.filter_by(fiction_name=name).first()
 
     # 爬取完成之后还是没有就真的没有了
     if fiction is None:
