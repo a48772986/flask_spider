@@ -141,8 +141,7 @@ def save_fiction_lst(fiction_lst):
 
 def save_fiction_content(fiction_url, fiction_content):
     fiction_id = fiction_url.split('/')[-2]
-    fiction_conntenturl = fiction_url.split('/')[-1].strip('.html')
-    insert_fiction_content(fiction_conntenturl, fiction_content, fiction_id)
+    insert_fiction_content(fiction_url, fiction_content, fiction_id)
 
 
 def down_fiction_lst(f_name):
