@@ -80,7 +80,7 @@ def fiction_content():
     if fiction_contents is None:
         print('fiction_real_url={}'.format(fiction_lst.fiction_real_url))
 
-        down_fiction_content(fiction_lst.fiction_real_url)
+        down_fiction_content(fiction_lst.fiction_lst_url)
         print('fiction_id={} fiction_url={}'.format(fic_id, f_url))
         fiction_contents = Fiction_Content().query.filter_by(
             fiction_id=fic_id, fiction_url=f_url).first()
