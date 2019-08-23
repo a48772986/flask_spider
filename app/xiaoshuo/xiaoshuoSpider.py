@@ -124,7 +124,8 @@ def get_fiction_content(fiction_url, flag=1):
         html = get_one_page(fiction_url, sflag=flag)
         soup = BeautifulSoup(html, 'html5lib')
         content = soup.find(id='content')
-        f_content = str(content)
+        print(content.string)
+        f_content = str(content.string)
         save_fiction_content(fiction_url, f_content)
     else:
         print('此章节已存在，无需下载！！！')
