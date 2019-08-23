@@ -123,10 +123,8 @@ def get_fiction_content(fiction_url, flag=1):
         print('此章节不存在，需下载')
         html = get_one_page(fiction_url, sflag=flag)
         soup = BeautifulSoup(html, 'html5lib')
-        content = \
-        soup.find_all('div', class_='content_read')[0].find_all('div', class_='box_con')[0].find_all('div', id='content')[0]
-        print(content.string)
-        f_content = str(content.string)
+        content = soup.find_all('div', id='content')
+        f_content = str(content)
         save_fiction_content(fiction_url, f_content)
     else:
         print('此章节已存在，无需下载！！！')
