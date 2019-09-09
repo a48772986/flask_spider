@@ -84,7 +84,7 @@ class RegisterForm(FlaskForm):
         validators=[email(message="邮箱格式不正确！")],
         render_kw={"placeholder": "E-mail: yourname@example.com"})
     birthdate = DateField(
-        label='日期',
+        label='出生日期',
         validators=[DataRequired('日期格式不正确')],
         render_kw={"placeholder": "日期如：2018-01-01"})
     submit = SubmitField(label='注册')

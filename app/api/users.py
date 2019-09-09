@@ -8,6 +8,7 @@ from flask_restful import Resource, fields, marshal_with, reqparse
 from ..models import User, db
 from ..tools import generate_id
 from .authentication import auth
+
 """
 parser = reqparse.RequestParser()
 parser.add_argument(*args,**kwargs)

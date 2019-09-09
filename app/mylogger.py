@@ -7,7 +7,7 @@ from time import strftime
 import logging
 
 log_name = os.path.join(
-    os.getenv('HOME'), 'log/flask/log_{}.log'.format(strftime('%Y%m%d')))
+    'C:/Users/Administrator/Desktop/小项目', 'log/flask/log_{}.log'.format(strftime('%Y%m%d')))
 
 FLASK_LOG_FILE = os.getenv('FLASK_LOG_FILE') or log_name
 

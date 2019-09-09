@@ -94,11 +94,12 @@ def search_fiction(name, flag=1):
 
     返回小说在网站的具体网址
     """
+    print(name)
     if name is None:
         raise Exception('小说名字必须输入！！！')
-
+    print(FictionListAll().query.filter_by(fiction_name=name).first())
     fiction = FictionListAll().query.filter_by(fiction_name=name).first()
-
+    print(fiction)
     # 如果没有找到，就去爬取所有小说
     if fiction is None:
         set_all_list()

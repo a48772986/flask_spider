@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask_login import UserMixin
 from flask import current_app
-
+import json
 from . import db, login_manager
 
 
@@ -149,6 +149,20 @@ class Task(db.Model):
     user_id = db.Column(db.String(20))
     emails = db.Column(db.String(200))
     stage = db.Column(db.Integer, default=1)
+
+
+class SpiderTask(db.Model):
+    __tablename__ = 'spider_task'
+    task_id = db.Column(db.Integer, primary_key=True)
+    task_type = db.Column(db.String(30), nullable=False)
+    task_name = db.Column(db.String(30))
+    task_status = db.Column(db.String(30))
+    creation_date = db.Column(db.DateTime)
+
+    def __repr__(self):
+        return json.dumps({"task_id": self.task_id, "task_type": self.task_type, "task_name": self.task_name,
+                           "task_status": self.task_status,
+                           "creation_date": str(self.creation_date)})
 
 
 # 公共参数表

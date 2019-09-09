@@ -3,7 +3,7 @@ import markdown
 import requests
 from datetime import datetime, timedelta
 from flask import (current_app, make_response, redirect, render_template,
-                   request, url_for, flash)
+                   request, url_for, flash, session)
 from flask_login import login_required, current_user, login_user, logout_user
 
 from . import main
@@ -15,7 +15,7 @@ from ..tools import generate_id
 
 @main.route('/')
 def index():
-    logger.info('index')
+    print(request, session)
     articles = Article().query.all()
     print(articles)
     return render_template('index.html', articles=articles, flag=1)
@@ -43,7 +43,7 @@ def login_up():
         username = registerForm.username.data
         user = User.query.filter_by(user_name=username).first()
         if user:
-            flask('用户名已存在')
+            flash('用户名已存在')
         email = registerForm.email.data
         passwd1 = registerForm.password.data
         passwd2 = registerForm.password2.data
@@ -140,7 +140,7 @@ def wrarticle():
         article_text = markdown.markdown(article_text, ['extra', 'codehilite'])
 
         article_id = generate_id('article')
-        aticle_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        article_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         article_type = '技术杂谈' if artitle_type == '1' else '人生感悟'
         content = re.compile('.*?>(.*?)<').findall(article_text)
         article_summary = ''

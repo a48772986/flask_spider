@@ -30,6 +30,8 @@ def create_app(config_name):
     app.register_blueprint(main_blueprint)
     from .fiction import fiction as fiction_blueprint
     app.register_blueprint(fiction_blueprint)
+    from .spider_task import spider_task as spider_task_blueprint
+    app.register_blueprint(spider_task_blueprint)
     # 初始化api
     from .api import api
     api.init_app(app)
